@@ -9,6 +9,7 @@ const updateCompanySchema = Joi.object().keys({
 	contactNo: Joi.string()
 		.length(10)
 		.pattern(/^[0-9]+$/),
+	logo: Joi.string().max(200),
 });
 
 const createCompanySchema = updateCompanySchema.fork(

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const config = {
   db: {
-    user: process.env.USER,
+    dbuser: process.env.DBUSER,
     host: process.env.HOST,
     port: process.env.DBPORT,
     dbName: process.env.DATABASE,
