@@ -1,11 +1,11 @@
 require("dotenv").config();
 const config = {
   db: {
-    dbuser: "admin",
-    host: "ieee-mock-interview.c90hbp9gmghy.us-east-2.rds.amazonaws.com",
-    port: "3306",
-    dbName: "MockInterview",
-    password:"jv0hZnS3IjIwqsaYNyPZ",
+    dbuser: process.env.DBUSER,
+    host: process.env.HOST,
+    port: process.env.DBPORT,
+    dbName: process.env.DATABASE,
+    password: process.env.PASSWORD,
   },
   mail:{
     clinetID: process.env.CLIENT_ID,
