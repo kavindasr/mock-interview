@@ -5,7 +5,7 @@ var ExtractJwt = require('passport-jwt').ExtractJwt;
 var User = require('../models/user.model')
 var jwt = require('jsonwebtoken'); 
 // var config = require('../config/config');
-var bcrypt = require('bcryptjs')
+var bcrypt = require('bcrypt')
 
 exports.local = passport.use(new LocalStrategy( {usernameField:"email", passwordField:"password" },(email,password, done) => {
     User.findOne({where:{email:email}})
@@ -31,7 +31,7 @@ exports.local = passport.use(new LocalStrategy( {usernameField:"email", password
 
 exports.getToken = (user)  => {
     return jwt.sign(user, "1234567890098764321",
-        {expiresIn: '1h'});
+        {expiresIn: '24h'});
 };
 
 var opts = {};

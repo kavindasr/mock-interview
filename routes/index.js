@@ -14,6 +14,7 @@ router.get('/', function (req, res, next) {
  * @description login
  */
 router.post('/', async (req, res) => {
+	console.log("in");
 	passport.authenticate('local', async (err, user) => {
 		try {
 			let panelID = "";

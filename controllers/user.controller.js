@@ -1,5 +1,5 @@
 const User = require('../models/user.model')
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 var generator = require('generate-password');
 const converter = require('../util/converter')
 const sendMail = require('../services/mailer')
@@ -59,13 +59,12 @@ exports.createUser = async (req, res) => {
 			length: 10,
 			numbers: true,
         })
-        console.log(password);
 		let salt = await bcrypt.genSalt(10);
 		user.password = await bcrypt.hash(password, salt);
 		user = await User.create(user,{transaction:t});
 		user = converter(user.dataValues);
-		// await sendMail("IEEE Mock Interview Account", password,user.email)
-		// console.log(mail);
+		let result = await sendMail("IEEE Mock Interview Account", password,user.email,{email:req.body.email,password:password})
+		console.log(result);
 		await t.commit();
 		let io = req.app.get('socket');
 		io.in("admin").emit('user','post',user);		
