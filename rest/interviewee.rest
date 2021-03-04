@@ -1,0 +1,30 @@
+###
+GET http://localhost:3000/interviewee
+
+###
+POST  http://localhost:3000/interviewee
+Content-Type: application/json
+ 
+{
+        "intervieweeID": 2,
+        "name": "Smith",
+        "email": "smith@gmail.com",
+        "cv": "None",
+        "contactNo": "3214567890",
+        "intervieweeImg": "soom.fj"
+}
+
+###
+PUT http://localhost:3000/interviewee/2
+Content-Type: application/json
+
+{
+        "name": "Smith",
+        "email": "smith@gmail.com",
+        "cv": "Done",
+        "contactNo": "3214567890",
+        "intervieweeImg": "soom.fj"
+}
+
+###
+DELETE  http://localhost:3000/interviewee/2

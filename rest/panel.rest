@@ -1,0 +1,40 @@
+###
+GET http://localhost:3000/panel/2
+
+###
+POST  http://localhost:3000/panel
+Content-Type: application/json
+ 
+{
+    "name": "hazelwood",
+    "email" : "josh@gmail.com",
+    "contactNo" : "0123456789",
+    "img" : "None",
+    "companyID" : "2",
+    "link" : "uom.lk",
+    "Volunteer":[
+        {
+            "volunteerID":20
+        }
+    ] 
+}
+###
+PUT http://localhost:3000/panel/2
+Content-Type: application/json
+
+{
+    "panelID": 16,
+    "name": "hazelwood",
+    "email" : "josh@gmail.com",
+    "contactNo" : "0123456789",
+    "img" : "None",
+    "companyID" : "2",
+    "link" : "uom.lk",
+    "Volunteer":[
+        {
+            "volunteerID":25
+        }
+    ] 
+}
+###
+DELETE  http://localhost:3000/panel/2

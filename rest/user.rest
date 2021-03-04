@@ -1,0 +1,38 @@
+###
+GET http://localhost:3000/users
+
+###
+POST  http://localhost:3000/users
+Content-Type: application/json
+
+ {
+        "name": "Tim paine",
+        "email": "tim@gmail.com",
+        "role": "volunteer",
+        "contactNo": "0766435538",
+        "img": "None"
+}
+panel1@gmail.com PYACrPDxOr 
+panel2@gmail.com ahYKaTqtnc
+panel3@gmail.com GlsTzU5h6u
+panel4@gmail.com kwVVosDZ9T
+admin@gmail.com  AFsKKdqf14
+volunteer11@gmail.com 9WhyzZWDIh 
+volunteer22@gmail.com 7GD2CJxUzp 
+volunteer33@gmail.com kyGZeWL2qV 
+volunteer44@gmail.com KmqMimXbO9 
+
+###
+PUT http://localhost:3000/users/3
+Content-Type: application/json
+
+ {
+        "name": "Poorna Gunathilaka",
+        "email": "poorna2152@gmail.com",
+        "role": "admin",
+        "contactNo": "0766435538",
+        "img": "None"
+}
+
+###
+DELETE  http://localhost:3000/users/19

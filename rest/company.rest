@@ -1,0 +1,27 @@
+###
+GET http://localhost:3000/company
+
+###
+POST  http://localhost:3000/company
+Content-Type: application/json
+
+{
+    "companyName": "Apache",
+    "email": "apache@gmail.com",
+    "contactNo": "1234566890",
+    "logo": "None"
+}
+
+###
+PUT http://localhost:3000/company/3
+Content-Type: application/json
+
+ {
+    "companyName": "Apache",
+    "email": "apache@gmail.com",
+    "contactNo": "0118938308",
+    "logo": "None"
+}
+
+###
+DELETE  http://localhost:3000/company/3
