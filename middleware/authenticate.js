@@ -5,7 +5,7 @@ var ExtractJwt = require('passport-jwt').ExtractJwt;
 var User = require('../models/user.model')
 var jwt = require('jsonwebtoken'); 
 // var config = require('../config/config');
-var bcrypt = require('bcrypt')
+var bcrypt = require('bcryptjs')
 
 exports.local = passport.use(new LocalStrategy( {usernameField:"email", passwordField:"password" },(email,password, done) => {
     User.findOne({where:{email:email}})
