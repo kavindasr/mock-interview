@@ -1,7 +1,7 @@
 require("dotenv").config();
 const config = {
   db: {
-    dbuser: process.env.DBUSER,
+    dbuser: process.env.USER,
     host: process.env.HOST,
     port: process.env.DBPORT,
     dbName: process.env.DATABASE,
@@ -13,7 +13,8 @@ const config = {
     redirectUri: process.env.REDIRECT_URI,
     refreshToken: process.env.REFRESH_TOKEN,
     mail: process.env.MAIL,
-  }
+  },
+  jsonwebtoken:process.env.JWT_SECRET
 };
 
 
