@@ -3,6 +3,7 @@ const Interview = require('../models/interview.model');
 const Interviewee = require('../models/interviewee.model');
 const converter = require('../util/converter');
 const sendToAdminVolunteerPanel = require('../util/websockethelper');
+const sendMail = require('../services/mailer');
 /**
  *@returns Array<{officerID, name, role, stationID, stationName, location, type, contactNo}>
  */
@@ -150,6 +151,36 @@ exports.updateAssignedInterview = async (req, res) => {
 	}
 };
 
+/**
+ * @description Add feedback and send a mail
+ * @param {Object} req: req.body: with state or feedback
+ *@returns {Object} interview
+ */
+
+exports.addFeedback = async (req, res) => {
+	let interview = {};
+	let company = {};
+	try {
+		interview = await Interview.update(
+			{ feedback: req.body.feedback },
+			{ where: { interviewID: req.params.interviewID }, returning: true }
+		);
+		company = sequelize.query('select companyName from company_panel where panelID = ?', {
+			replacements: [req.body.panelID],
+		});
+		
+		if(company.hasOwnProperty('dataValues')){
+			company = company.dataValues
+		}
+
+		sendMail('Feedback of ', req.feedback, req.body.email, { company: company, feedback: req.body.feedback });
+		interview = converter(interview.dataValues);
+		sendToAdminVolunteerPanel(io, 'interview', 'put', interview, interview.panelID);
+		return res.status(200).send(interview);
+	} catch (e) {
+		return res.status(400).send(e.message);
+	}
+};
 
 /**
  * @returns success or error message
