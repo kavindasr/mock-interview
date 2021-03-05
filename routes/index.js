@@ -7,7 +7,7 @@ const VolunteerPanel = require('../models/voluteerpanel.model');
 const converter = require('../util/converter');
 /* GET home page. */
 router.get('/', function (req, res, next) {
-	res.render('index', { title: 'Express' });
+	res.status(200).send("Welcome");
 });
 
 /**
