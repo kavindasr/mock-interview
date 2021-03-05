@@ -1,5 +1,5 @@
 const User = require('../models/user.model')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 var generator = require('generate-password');
 const converter = require('../util/converter')
 const sendMail = require('../services/mailer')
