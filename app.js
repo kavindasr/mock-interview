@@ -11,7 +11,6 @@ var authenticate = require('./middleware/authenticate');
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());

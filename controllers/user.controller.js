@@ -64,7 +64,6 @@ exports.createUser = async (req, res) => {
 		user = await User.create(user,{transaction:t});
 		user = converter(user.dataValues);
 		sendMail("IEEE Mock Interview Account", password,user.email,{email:req.body.email,password:password})
-		console.log(result);
 		await t.commit();
 		let io = req.app.get('socket');
 		io.in("admin").emit('user','post',user);		
