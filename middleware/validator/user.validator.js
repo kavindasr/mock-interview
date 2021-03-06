@@ -11,7 +11,6 @@ const updateUserSchema = Joi.object().keys({
 		.length(10)
 		.pattern(/^[0-9]+$/),
 	role: Joi.string().max(20).valid(...USER_TYPES),
-	img: Joi.string().max(255),
 });
 
 const createUserSchema = updateUserSchema.fork(

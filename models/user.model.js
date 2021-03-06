@@ -11,7 +11,6 @@ const User = sequelize.define(
 		password: DataTypes.TEXT,
 		role: DataTypes.TEXT,
         contactNo: DataTypes.TEXT,
-        img: DataTypes.TEXT
 	},
 	{ freezeTableName: true, timestamps: false }
 );

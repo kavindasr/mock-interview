@@ -3,6 +3,7 @@ const InterviewController = require('../controllers/interview.controller')
 const {validateInterviewPost,validateInterviewPut} = require('../middleware/validator/interview.validator')
 const { ADMINVOL, ADMINPANEL} = require('../util/constants')
 const {authorize} = require('../middleware/authorize')
+const {validatorParam} =require('../middleware/validator/validator')
 const router = express.Router();
 
 
@@ -17,35 +18,40 @@ router.get('/', authorize(), InterviewController.getInterviews);
  */
 router.post('/', authorize(ADMINVOL), validateInterviewPost, InterviewController.createInterview);
 
+/**
+ * @description create Interview
+ */
+router.post('/feedback', authorize(ADMINPANEL), InterviewController.addFeedback);
+
 
 /**
  * @description update Interview
  */
-router.put('/:interviewID', authorize(ADMINPANEL), validateInterviewPut, InterviewController.updateInterview);
+router.put('/:interviewID', authorize(ADMINPANEL), validatorParam, validateInterviewPut, InterviewController.updateInterview);
 
 
 /**
  * @description delete Interview
  */
-router.delete('/:interviewID', authorize(ADMINVOL), InterviewController.deleteInterview);
+router.delete('/:interviewID', authorize(ADMINVOL), validatorParam, InterviewController.deleteInterview);
 
 
 /**
  * @description get all Interviews pof the volunteer
  */
-router.get('/volunteer/:panelID', authorize(ADMINVOL), InterviewController.getInterviewsOfAssignedPanel);
+router.get('/volunteer/:panelID', authorize(ADMINVOL), validatorParam, InterviewController.getInterviewsOfAssignedPanel);
 
 
 /**
  * @description get all Interviews assigned to panel
  */
-router.get('/panel/:panelID', authorize(ADMINPANEL), InterviewController.getAssignedInterviews);
+router.get('/panel/:panelID', authorize(ADMINPANEL), validatorParam, InterviewController.getAssignedInterviews);
 
 
 /**
  * @description get all Interviews
  */
-router.put('/panel/:interviewID', authorize(ADMINPANEL) ,InterviewController.updateAssignedInterview);
+router.put('/panel/:interviewID', authorize(ADMINPANEL) ,validatorParam, InterviewController.updateAssignedInterview);
 
 
 router.all('*', (req, res) => {

@@ -3,6 +3,7 @@ const PanelController = require('../controllers/panel.controller')
 const {validatePanelPost, validatePanelPut} = require('../middleware/validator/panel.validator')
 const {authorize} = require('../middleware/authorize');
 const { ADMINVOL } = require('../util/constants');
+const {validatorParam} =require('../middleware/validator/validator')
 const router = express.Router();
 
 /**
@@ -18,23 +19,23 @@ router.post('/', authorize(), validatePanelPost, PanelController.createPanel);
 /**
  * @description get all panels of a company
  */
-router.get('/:panelID',authorize(), PanelController.getPanel);
+router.get('/:panelID',authorize(), validatorParam, PanelController.getPanel);
 
 /**
  * @description update panel
  */
-router.put('/:panelID', authorize(), validatePanelPut, PanelController.updatePanel);
+router.put('/:panelID', authorize(), validatorParam, validatePanelPut, PanelController.updatePanel);
 
 /**
  * @description delete company
  */
-router.delete('/:panelID', authorize(), PanelController.deletePanel);
+router.delete('/:panelID', authorize(),validatorParam, PanelController.deletePanel);
 
 
 /**
  * @description get the panels assigned to a volunteer
  */
-router.get('/volunteer/:volunteerID', authorize(ADMINVOL), PanelController.getVolunteerPanels);
+router.get('/volunteer/:volunteerID', authorize(ADMINVOL), validatorParam, PanelController.getVolunteerPanels);
 
 
 router.all('*', (req, res) => {

@@ -11,9 +11,9 @@ const updatePanelSchema = Joi.object().keys({
 		.length(10)
 		.pattern(/^[0-9]+$/),
 	role: Joi.string().max(20).valid('Panel'),
-	img: Joi.string().max(255),
 	panelID: Joi.number().integer().greater(0),
 	userID: Joi.number().integer().greater(0),
+	volunteerID: Joi.number().integer().greater(0),
 	companyID: Joi.number().integer().greater(0),
 	link: Joi.string().max(200),
 	Volunteer: Joi.array().items({ panelID: Joi.number().integer().greater(0), volunteerID: Joi.number().integer().greater(0) }),

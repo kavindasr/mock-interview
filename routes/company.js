@@ -1,7 +1,8 @@
 const express = require('express');
 const CompanyController = require('../controllers/company.controller')
 const {validateCompanyPost, validateCompanyPut} = require('../middleware/validator/company.validator')
-const {authorize} = require('../middleware/authorize')
+const {authorize} = require('../middleware/authorize');
+const {validatorParam} =require('../middleware/validator/validator')
 const router = express.Router();
 
 /**
@@ -13,7 +14,7 @@ router.get('/', authorize(), CompanyController.getCompanies);
 /**
  * @description update company
  */
-router.put('/:companyID',authorize(),validateCompanyPut ,CompanyController.updateCompany);
+router.put('/:companyID',authorize(),validatorParam, validateCompanyPut ,CompanyController.updateCompany);
 
 /**
  * @description create company
@@ -24,7 +25,7 @@ router.post('/' ,authorize(),validateCompanyPost, CompanyController.createCompan
 /**
  * @description delete company
  */
-router.delete('/:companyID', authorize(),CompanyController.deleteCompany);
+router.delete('/:companyID', authorize(), validatorParam,CompanyController.deleteCompany);
 
 /**
  * @description change the password of the user

@@ -67,7 +67,9 @@ exports.createInterview = async (req, res) => {
 			attributes: { exclude: 'feedback' },
 			include: { model: Interviewee },
 		});
-		interview = converter(interview.dataValues);
+		if (interview.hasOwnProperty('dataValues')) {
+			interview = converter(interview.dataValues);
+		}
 		let io = req.app.get('socket');
 		sendToAdminVolunteerPanel(io, 'interview', 'post', interview, interview.panelID);
 		return res.status(200).send(interview);
@@ -113,8 +115,9 @@ exports.updateInterview = async (req, res) => {
 			attributes: { exclude: 'feedback' },
 			include: { model: Interviewee },
 		});
-
-		interview = converter(interview.dataValues);
+		if (interview.hasOwnProperty('dataValues')) {
+			interview = converter(interview.dataValues);
+		}
 		interview.availability = updateVal;
 		let io = req.app.get('socket');
 		sendToAdminVolunteerPanel(io, 'interview', 'put', interview, interview.panelID);
@@ -142,7 +145,9 @@ exports.updateAssignedInterview = async (req, res) => {
 			where: { interviewID: req.params.interviewID },
 			include: { model: Interviewee },
 		});
-		interview = converter(interview.dataValues);
+		if (interview.hasOwnProperty('dataValues')) {
+			interview = converter(interview.dataValues);
+		}
 		let io = req.app.get('socket');
 		sendToAdminVolunteerPanel(io, 'interview', 'put', interview, interview.panelID);
 		return res.status(200).send(interview);
@@ -168,13 +173,15 @@ exports.addFeedback = async (req, res) => {
 		company = sequelize.query('select companyName from company_panel where panelID = ?', {
 			replacements: [req.body.panelID],
 		});
-		
-		if(company.hasOwnProperty('dataValues')){
-			company = company.dataValues
+
+		if (company.hasOwnProperty('dataValues')) {
+			company = company.dataValues;
 		}
 
-		sendMail('Feedback of ', req.feedback, req.body.email, { company: company, feedback: req.body.feedback });
-		interview = converter(interview.dataValues);
+		sendMail(`Feedback of ${company.companyName}`, req.feedback, req.body.email, { company: company, feedback: req.body.feedback });
+		if (interview.hasOwnProperty('dataValues')) {
+			interview = converter(interview.dataValues);
+		}
 		sendToAdminVolunteerPanel(io, 'interview', 'put', interview, interview.panelID);
 		return res.status(200).send(interview);
 	} catch (e) {
