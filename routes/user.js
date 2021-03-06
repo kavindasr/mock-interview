@@ -42,7 +42,7 @@ router.delete('/:id', authorize(),UserController.deleteUser);
 /**
  * @description change the password of the user
  */
-router.post('/changePassword/:id', authorize(),validateChangePassword, UserController.changePassword);
+router.post('/changePassword/:id', authorize(), UserController.changePassword);
 
 
 router.all('*', (req, res) => {

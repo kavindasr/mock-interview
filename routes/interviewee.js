@@ -18,13 +18,13 @@ router.get('/:intervieweeID', authorize(ADMINPANEL), IntervieweeController.getIn
 /**
  * @description create Interviewee
  */
-router.post('/', authorize(), validateIntervieweePost, IntervieweeController.createInterviewee);
+router.post('/', authorize(ADMINVOL), validateIntervieweePost, IntervieweeController.createInterviewee);
 
 
 /**
  * @description update Interviewee
  */
-router.put('/:intervieweeID', authorize(), validateIntervieweePut, IntervieweeController.updateInterviewee);
+router.put('/:intervieweeID', authorize(ADMINVOL), validateIntervieweePut, IntervieweeController.updateInterviewee);
 
 
 /**
