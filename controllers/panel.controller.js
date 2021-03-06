@@ -5,7 +5,7 @@ const VolunteerPanel = require('../models/voluteerpanel.model');
 const bcrypt = require('bcryptjs');
 var generator = require('generate-password');
 const converter = require('../util/converter');
-const sendMail =  require('../services/mailer');
+const sendMail = require('../services/mailer');
 const Company = require('../models/company.model');
 /**
  * make this to get volunteer details also
@@ -33,7 +33,7 @@ exports.getAllPanels = async (req, res) => {
 	let panels = [];
 	try {
 		panels = await VolunteerPanel.findAll({
-			include: { model: Panel, attributes: { exclude: ['password'] }, right:true , include:{ model: User }},
+			include: { model: Panel, right: true, include: { model: User, attributes: { exclude: ['password'] } } },
 		});
 
 		panels = panels.map((item) => converter(item.dataValues));
@@ -51,11 +51,13 @@ exports.getPanel = async (req, res) => {
 	let panel = {};
 	try {
 		panel = await Panel.findOne({
-			where:{panelID:req.params.panelID},
-			include: [{ model: User, attributes: { exclude: ['password'] }},{model:Company}],
+			where: { panelID: req.params.panelID },
+			include: [{ model: User, attributes: { exclude: ['password'] } }, { model: Company }],
 		});
-		if(panel){
-			panel = converter(panel.dataValues);
+		if (panel) {
+			if (panel.hasOwnProperty('dataValues')) {
+				panel = converter(panel.dataValues);
+			}
 		}
 		return res.status(200).send(panel);
 	} catch (e) {
@@ -109,18 +111,22 @@ exports.createPanel = async (req, res) => {
 				transaction: t,
 			});
 		}
-		// await sendMail("IEEE Mock Interview Account", password,user.email)
-		 
+		await sendMail("IEEE Mock Interview Account", password,user.email)
+
 		await t.commit();
 
 		volunteer = volunteer.map((item) => converter(item.dataValues));
-		user = converter(user.dataValues);
+		if (user.hasOwnProperty('dataValues')) {
+			user = converter(user.dataValues);
+		}
 		delete user.password;
-		panel = converter(panel.dataValues);
+		if (panel.hasOwnProperty('dataValues')) {
+			panel = converter(panel.dataValues);
+		}
 		panel = { ...panel, ...user };
 		panel.Volunteer = volunteer;
 		let io = req.app.get('socket');
-		io.in("admin").emit('panel','post',panel);
+		io.in('admin').emit('panel', 'post', panel);
 		return res.status(200).send(panel);
 	} catch (e) {
 		await t.rollback();
@@ -138,24 +144,26 @@ exports.updatePanel = async (req, res) => {
 	let volunteer = [];
 	let t = await sequelize.transaction();
 	// try {
-		panel = await Panel.update(req.body, {
-			where: { panelID: req.params.panelID },
-			returning: true,
+	panel = await Panel.update(req.body, {
+		where: { panelID: req.params.panelID },
+		returning: true,
+		transaction: t,
+	});
+	if (req.body.hasOwnProperty('Volunteer')) {
+		volunteer = await VolunteerPanel.bulkCreate(req.body.Volunteer, {
+			ignoreDuplicates: true,
 			transaction: t,
 		});
-		if (req.body.hasOwnProperty('Volunteer')) {
-			volunteer = await VolunteerPanel.bulkCreate(req.body.Volunteer, {
-				ignoreDuplicates: true,
-				transaction: t,
-			});
-		}
-		await t.commit();
-		panel = await Panel.findOne({ where: { panelID: req.params.panelID } });
-		console.log(panel);
+	}
+	await t.commit();
+	panel = await Panel.findOne({ where: { panelID: req.params.panelID } });
+	console.log(panel);
+	if (panel.hasOwnProperty('dataValues')) {
 		panel = converter(panel.dataValues);
-		let io = req.app.get('socket');
-		io.in('admin').emit('panel','put',panel);
-		return res.status(200).send(panel);
+	}
+	let io = req.app.get('socket');
+	io.in('admin').emit('panel', 'put', panel);
+	return res.status(200).send(panel);
 	// } catch (e) {
 	// 	await t.rollback();
 	// 	return res.status(400).send(e.message);
@@ -168,8 +176,8 @@ exports.deletePanel = async (req, res) => {
 	try {
 		await Panel.destroy({ where: { panelID: req.params.panelID } });
 		let io = req.app.get('socket');
-		io.in("admin").emit('panel','delete',{id:req.params.panelID});
-		return res.status(200).send('Panel succesfully deleted'); 
+		io.in('admin').emit('panel', 'delete', { id: req.params.panelID });
+		return res.status(200).send('Panel succesfully deleted');
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}

@@ -17,7 +17,6 @@ CREATE TABLE `User` (
   `email` varchar(40) NOT NULL UNIQUE,
   `contactNo` varchar(10),
   `role` varchar(20),
-  `img` varchar(255),
   `password` varchar(255),
   PRIMARY KEY (`id`)
 );

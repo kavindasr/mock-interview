@@ -40,27 +40,23 @@ exports.createCompany = async (req, res) => {
 
 exports.updateCompany = async (req, res) => {
 	let company = {};
-	// try {
+	try {
 		company = await Company.update(
 			{ ...req.body },
 			{ where: { companyID: req.params.companyID }, returning: true }
 		);
 		company = await Company.findOne({ where: { companyID: req.params.companyID } });
-		company = converter(company.dataValues);
+		if (company.hasOwnProperty('dataValues')) {
+			company = converter(company.dataValues);
+		}
 		let io = req.app.get('socket');
-		var roster = io.sockets.adapter.rooms.get('admin');
-		roster = roster == undefined ? []:Array.from(roster)
-		roster.forEach(so => {
-			console.log(io.sockets.adapter.nsp.sockets.get(so).name)
-			// console.log(io.sockets.adapter.nsp)
-		})
-		// console.log(roster);
 		io.in('admin').emit('company', 'put', company);
 		return res.status(200).send(company);
-	// } catch (e) {
-	// 	return res.status(400).send(e.message);
-	// }
+	} catch (e) {
+		return res.status(400).send(e.message);
+	}
 };
+
 /**
  * @returns success or error message
  */

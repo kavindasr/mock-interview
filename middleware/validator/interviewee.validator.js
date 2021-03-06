@@ -10,10 +10,10 @@ const updateIntervieweeSchema = Joi.object().keys({
 	contactNo: Joi.string()
 		.length(10)
 		.pattern(/^[0-9]+$/),
-    dept: Joi.string().email().max(50),
+    dept: Joi.string().max(50),
 	cv: Joi.string().max(200),
 	availability: Joi.boolean(),
-	intervieweeImg: Joi.string().max(255),
+	intervieweeImg: Joi.string().allow('').min(0).max(255),
 });
 
 const createIntervieweeSchema = updateIntervieweeSchema.fork(
