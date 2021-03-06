@@ -13,7 +13,7 @@ const updateIntervieweeSchema = Joi.object().keys({
     dept: Joi.string().max(50),
 	cv: Joi.string().max(200),
 	availability: Joi.boolean(),
-	intervieweeImg: Joi.string().allow('').min(0).max(255),
+	intervieweeImg: Joi.string().allow("").min(0).max(255),
 });
 
 const createIntervieweeSchema = updateIntervieweeSchema.fork(

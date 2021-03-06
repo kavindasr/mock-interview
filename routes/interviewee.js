@@ -25,7 +25,9 @@ router.post('/', authorize(ADMINVOL), validateIntervieweePost, IntervieweeContro
 /**
  * @description update Interviewee
  */
-router.put('/:intervieweeID', authorize(), validateIntervieweePut,validatorParam, IntervieweeController.updateInterviewee);
+
+router.put('/:intervieweeID', authorize(ADMINVOL), validatorParam, validateIntervieweePut, IntervieweeController.updateInterviewee);
+
 
 
 /**

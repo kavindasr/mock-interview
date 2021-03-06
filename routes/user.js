@@ -46,6 +46,7 @@ router.delete('/:id', authorize(),validatorParam, UserController.deleteUser);
 router.post('/changePassword/:id', authorize(),validatorParam, UserController.changePassword);
 
 
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });
