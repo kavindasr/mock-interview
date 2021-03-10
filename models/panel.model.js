@@ -10,6 +10,7 @@ const Panel = sequelize.define(
 		userID: DataTypes.INTEGER,
 		companyID:  DataTypes.INTEGER,
 		link: DataTypes.TEXT,
+		needHelp: DataTypes.BOOLEAN
 	},
 	{ freezeTableName: true, timestamps: false }
 );

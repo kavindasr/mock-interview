@@ -2,7 +2,7 @@ const express = require('express');
 const PanelController = require('../controllers/panel.controller')
 const {validatePanelPost, validatePanelPut} = require('../middleware/validator/panel.validator')
 const {authorize} = require('../middleware/authorize');
-const { ADMINVOL, ADMINPANEL} = require('../util/constants')
+const { ADMINVOL, USER_TYPES } = require('../util/constants');
 const {validatorParam} =require('../middleware/validator/validator')
 const router = express.Router();
 
@@ -25,6 +25,11 @@ router.get('/:panelID',authorize(ADMINPANEL), validatorParam, PanelController.ge
  * @description update panel
  */
 router.put('/:panelID', authorize(), validatorParam, validatePanelPut, PanelController.updatePanel);
+
+/**
+ * @description update need Help
+ */
+router.put('/needHelp/:panelID', authorize(USER_TYPES), validatorParam, validatePanelPut, PanelController.setNeedHelp);
 
 /**
  * @description delete company

@@ -2,7 +2,8 @@ const express = require('express');
 const UserController = require('../controllers/user.controller');
 const { authorize } = require('../middleware/authorize');
 const {validateUserPost, validateUserPut, validateChangePassword} = require('../middleware/validator/user.validator')
-const {validatorParam} =require('../middleware/validator/validator')
+const {validatorParam} =require('../middleware/validator/validator');
+const { ADMINPANEL } = require('../util/constants');
 const router = express.Router();
 
 /**
@@ -21,6 +22,11 @@ router.get('/:id', validatorParam, UserController.getUser);
  * @description get all volunteers
  */
 router.get('/volunteer', authorize(), UserController.getVolunteers);
+
+/**
+ * @description get the volunteer assigned to panel
+ */
+router.get('/volunteer/:panelID', authorize(ADMINPANEL), validatorParam, UserController.getVolunteerOfPanel);
 
 /**
 
