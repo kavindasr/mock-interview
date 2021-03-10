@@ -180,7 +180,7 @@ exports.setNeedHelp = async (req, res) => {
 			}
 		);
 		let io = req.app.get('socket');
-		sendToAdminVolunteerPanel(io,'Help','update',{},req.params.panelID)
+		// sendToAdminVolunteerPanel(io,'Help','update',{},req.params.panelID)
 		return res.status(200).send('Help message sent');
 	} catch (e) {
 		return res.status(400).send(e.message);
