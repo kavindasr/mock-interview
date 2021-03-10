@@ -5,6 +5,7 @@ const converter = require('../util/converter');
 const sendMail = require('../services/mailer');
 const sequelize = require('../database/connection');
 const { Op } = require('sequelize');
+const VolunteerPanel = require('../models/voluteerpanel.model');
 
 /**
  *@returns Array<{officerID, name, role, stationID, stationName, location, type, contactNo}>
@@ -58,6 +59,24 @@ exports.getVolunteers = async (req, res) => {
 };
 
 /**
+ */
+exports.getVolunteerOfPanel = async (req, res) => {
+	let volunteer = {};
+	try {
+		volunteer = await VolunteerPanel.findOne({
+			where: { panelID: req.params.panelID },
+			include: { model: User, attributes: { exclude: 'password' } },
+		});
+		if (volunteer.hasOwnProperty('dataValues')) {
+			volunteer = converter(volunteer.dataValues);
+		}
+		return res.status(200).send(volunteer);
+	} catch (e) {
+		return res.status(400).send(e.message);
+	}
+};
+
+/**
  * @description Auto generates a password and send it to users mail
  *@returns Object
  */
@@ -75,8 +94,8 @@ exports.createUser = async (req, res) => {
 		user = await User.create(user, { transaction: t });
 		if (user.hasOwnProperty('dataValues')) {
 			user = converter(user.dataValues);
-		} 
-		sendMail("IEEE Mock Interview Account", password,user.email,{email:req.body.email,password:password})
+		}
+		sendMail('IEEE Mock Interview Account', password, user.email, { email: req.body.email, password: password });
 		await t.commit();
 		delete user.password;
 		let io = req.app.get('socket');

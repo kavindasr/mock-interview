@@ -13,6 +13,7 @@ const updatePanelSchema = Joi.object().keys({
 	role: Joi.string().max(20).valid('Panel'),
 	panelID: Joi.number().integer().greater(0),
 	userID: Joi.number().integer().greater(0),
+	needHelp: Joi.boolean(),
 	volunteerID: Joi.number().integer().greater(0),
 	companyID: Joi.number().integer().greater(0),
 	link: Joi.string().max(200),

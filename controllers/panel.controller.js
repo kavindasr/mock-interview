@@ -7,6 +7,7 @@ var generator = require('generate-password');
 const converter = require('../util/converter');
 const sendMail = require('../services/mailer');
 const Company = require('../models/company.model');
+const sendToAdminVolunteerPanel = require('../util/websockethelper');
 /**
  * make this to get volunteer details also
  *@returns Array<{officerID, name, role, stationID, stationName, location, type, contactNo}>
@@ -102,7 +103,7 @@ exports.createPanel = async (req, res) => {
 		user.password = await bcrypt.hash(password, salt);
 		user = await User.create({ ...user, role: 'Panel' }, { transaction: t });
 		let id = user.id;
-		panel = await Panel.create({ ...req.body, userID: id }, { transaction: t });
+		panel = await Panel.create({ ...req.body, userID: id, needHelp: 0 }, { transaction: t });
 		if (req.body.hasOwnProperty('Volunteer')) {
 			req.body.Volunteer = req.body.Volunteer.map((item) => {
 				return { ...item, panelID: panel.panelID };
@@ -111,7 +112,7 @@ exports.createPanel = async (req, res) => {
 				transaction: t,
 			});
 		}
-		await sendMail("IEEE Mock Interview Account", password,user.email)
+		await sendMail('IEEE Mock Interview Account', password, user.email);
 
 		await t.commit();
 
@@ -143,31 +144,47 @@ exports.updatePanel = async (req, res) => {
 	let panel = {};
 	let volunteer = [];
 	let t = await sequelize.transaction();
-	// try {
-	panel = await Panel.update(req.body, {
-		where: { panelID: req.params.panelID },
-		returning: true,
-		transaction: t,
-	});
-	if (req.body.hasOwnProperty('Volunteer')) {
-		volunteer = await VolunteerPanel.bulkCreate(req.body.Volunteer, {
-			ignoreDuplicates: true,
+	try {
+		panel = await Panel.update(req.body, {
+			where: { panelID: req.params.panelID },
+			returning: true,
 			transaction: t,
 		});
+		if (req.body.hasOwnProperty('Volunteer')) {
+			volunteer = await VolunteerPanel.bulkCreate(req.body.Volunteer, {
+				ignoreDuplicates: true,
+				transaction: t,
+			});
+		}
+		await t.commit();
+		panel = await Panel.findOne({ where: { panelID: req.params.panelID } });
+		console.log(panel);
+		if (panel.hasOwnProperty('dataValues')) {
+			panel = converter(panel.dataValues);
+		}
+		let io = req.app.get('socket');
+		io.in('admin').emit('panel', 'put', panel);
+		return res.status(200).send(panel);
+	} catch (e) {
+		await t.rollback();
+		return res.status(400).send(e.message);
 	}
-	await t.commit();
-	panel = await Panel.findOne({ where: { panelID: req.params.panelID } });
-	console.log(panel);
-	if (panel.hasOwnProperty('dataValues')) {
-		panel = converter(panel.dataValues);
+};
+
+exports.setNeedHelp = async (req, res) => {
+	try {
+		await Panel.update(
+			{ needHelp: req.body.needHelp },
+			{
+				where: { panelID: req.params.panelID },
+			}
+		);
+		let io = req.app.get('socket');
+		sendToAdminVolunteerPanel(io,'Help','update',{},req.params.panelID)
+		return res.status(200).send('Help message sent');
+	} catch (e) {
+		return res.status(400).send(e.message);
 	}
-	let io = req.app.get('socket');
-	io.in('admin').emit('panel', 'put', panel);
-	return res.status(200).send(panel);
-	// } catch (e) {
-	// 	await t.rollback();
-	// 	return res.status(400).send(e.message);
-	// }
 };
 /**
  * @returns success or error message

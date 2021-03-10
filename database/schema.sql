@@ -26,6 +26,7 @@ CREATE TABLE `Panel` (
   `userID` int,
   `companyID` int,
   `link` varchar(200),
+  `needHelp` Boolean,
   PRIMARY KEY (`panelID`),
   FOREIGN KEY (`userID`) REFERENCES `User`(`id`),
   FOREIGN KEY (`companyID`) REFERENCES `Company`(`companyID`) ON DELETE CASCADE
