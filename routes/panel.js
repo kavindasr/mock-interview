@@ -19,7 +19,7 @@ router.post('/', authorize(), validatePanelPost, PanelController.createPanel);
 /**
  * @description get all panels of a company
  */
-router.get('/:panelID',authorize(), validatorParam, PanelController.getPanel);
+router.get('/:panelID',authorize(ADMINPANEL), validatorParam, PanelController.getPanel);
 
 /**
  * @description update panel
