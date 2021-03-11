@@ -168,7 +168,7 @@ exports.addFeedback = async (req, res) => {
 	try {
 		interview = await Interview.update(
 			{ feedback: req.body.feedback },
-			{ where: { interviewID: req.params.interviewID }, returning: true }
+			{ where: { interviewID: req.body.interviewID }, returning: true }
 		);
 		company = sequelize.query('select companyName from company_panel where panelID = ?', {
 			replacements: [req.body.panelID],
@@ -182,8 +182,7 @@ exports.addFeedback = async (req, res) => {
 		if (interview.hasOwnProperty('dataValues')) {
 			interview = converter(interview.dataValues);
 		}
-		sendToAdminVolunteerPanel(io, 'interview', 'put', interview, interview.panelID);
-		return res.status(200).send(interview);
+		return res.status(200).send("Feedback added");
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}
