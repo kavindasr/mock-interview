@@ -21,7 +21,7 @@ const oAuth2Client = new google.auth.OAuth2(config.mail.clinetID, config.mail.cl
 
 oAuth2Client.setCredentials({ refresh_token: config.mail.refreshToken });
 
-const sendMail = async (subject, text, to, obj) => {
+const sendMail = async (subject, text, to, obj, isFeedback = false) => {
 	try {
 		const accessToken = await oAuth2Client.getAccessToken();
 		const transport = nodemailer.createTransport({
@@ -42,10 +42,10 @@ const sendMail = async (subject, text, to, obj) => {
 		transport.use('compile', hbs(options));
 
 		const mailOptions = {
-			from: 'IEEE Mock Interview',
+			from: config.mail.mail,
 			to,
 			subject,
-			template: 'credentials',
+			template: isFeedback ? 'feedback':'credentials',
 			context: obj,
 			attachments: [
 				{

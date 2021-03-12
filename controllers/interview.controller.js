@@ -170,15 +170,16 @@ exports.addFeedback = async (req, res) => {
 			{ feedback: req.body.feedback },
 			{ where: { interviewID: req.body.interviewID }, returning: true }
 		);
-		company = sequelize.query('select companyName from company_panel where panelID = ?', {
-			replacements: [req.body.panelID],
+		company = await sequelize.query('select * from FeedbackDetails where interviewID = ?',  {
+			replacements: [req.body.interviewID],
 		});
-
+		company = company[0][0]
 		if (company.hasOwnProperty('dataValues')) {
 			company = company.dataValues;
 		}
 
-		sendMail(`Feedback of ${company.companyName}`, req.feedback, req.body.email, { company: company, feedback: req.body.feedback });
+		let resuly = await sendMail(`Feedback of ${company.companyName}`, req.body.feedback, company.email, { company: company.companyName, feedback: req.body.feedback , name: company.name},true);
+		console.log(resuly)
 		if (interview.hasOwnProperty('dataValues')) {
 			interview = converter(interview.dataValues);
 		}
