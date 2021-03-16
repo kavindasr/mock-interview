@@ -67,3 +67,4 @@ CREATE TABLE `Interview` (
   FOREIGN KEY (`intervieweeID`) REFERENCES `Interviewee`(`intervieweeID`) ON DELETE CASCADE 
 );
 
+create view FeedbackDetails as select email, interviewID, companyName from interview left join interviewee on interview.intervieweeID = interviewee.intervieweeID left join panel on panel.panelID = interview.panelID left join company on panel.companyID = company.companyID;
