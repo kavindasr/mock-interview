@@ -30,14 +30,9 @@ var io = require('socket.io')(server, {
 	cors: {
 		origin: '*',
 	},
-	path:"/websockets",
-	maxHttpBufferSize: 1024, 
-    pingInterval: 60 * 1000, 
-    pingTimeout: 4 * 60 * 1000 
 });
 
 io.on('connection', (client) => {
-	console.log("ab");
 	client.on('subscribe', (room, panelID = [-1]) => {
 		client.join(room);
 		if (panelID[0] != -1) {
