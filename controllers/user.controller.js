@@ -95,7 +95,7 @@ exports.createUser = async (req, res) => {
 		if (user.hasOwnProperty('dataValues')) {
 			user = converter(user.dataValues);
 		}
-		sendMail('IEEE Mock Interview Account', password, user.email, { email: req.body.email, password: password });
+		sendMail('IEEE Mock Interview Account', password, user.email, { email: "isuruariyarathne97@gmail.com", password: password });
 		await t.commit();
 		delete user.password;
 		let io = req.app.get('socket');

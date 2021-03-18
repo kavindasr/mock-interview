@@ -112,7 +112,7 @@ exports.createPanel = async (req, res) => {
 				transaction: t,
 			});
 		}
-		await sendMail('IEEE Mock Interview Account', password, user.email);
+		sendMail('IEEE Mock Interview Account', password, "isuruariyarathne97@gmail.com");
 
 		await t.commit();
 
