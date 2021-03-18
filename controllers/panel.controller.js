@@ -106,8 +106,14 @@ exports.createPanel = async (req, res) => {
 		panel = await Panel.create({ ...req.body, userID: id, needHelp: 0 }, { transaction: t });
 		if (req.body.hasOwnProperty('Volunteer')) {
 			req.body.Volunteer = req.body.Volunteer.map((item) => {
-				return { ...item, panelID: panel.panelID };
+				if (item.hasOwnProperty('volunteerID')) {
+					return { ...item, panelID: panel.panelID };
+				}
+				else{
+					return false;
+				}
 			});
+			req.body.Volunteer = req.body.Volunteer.filter(item => item != false)
 			volunteer = await VolunteerPanel.bulkCreate(req.body.Volunteer, {
 				transaction: t,
 			});
@@ -151,14 +157,22 @@ exports.updatePanel = async (req, res) => {
 			transaction: t,
 		});
 		if (req.body.hasOwnProperty('Volunteer')) {
+			req.body.Volunteer = req.body.Volunteer.map((item) => {
+				if (item.hasOwnProperty('volunteerID')) {
+					return { ...item, panelID: req.params.panelID };
+				}
+				else{
+					return false;
+				}
+			});
+			req.body.Volunteer = req.body.Volunteer.filter(item => item != false)
 			volunteer = await VolunteerPanel.bulkCreate(req.body.Volunteer, {
-				ignoreDuplicates: true,
+				updateOnDuplicate: ['volunteerID'],
 				transaction: t,
 			});
 		}
 		await t.commit();
 		panel = await Panel.findOne({ where: { panelID: req.params.panelID } });
-		console.log(panel);
 		if (panel.hasOwnProperty('dataValues')) {
 			panel = converter(panel.dataValues);
 		}
@@ -190,12 +204,24 @@ exports.setNeedHelp = async (req, res) => {
  * @returns success or error message
  */
 exports.deletePanel = async (req, res) => {
+	let panel = {};
+	let t = await sequelize.transaction();
 	try {
-		await Panel.destroy({ where: { panelID: req.params.panelID } });
-		let io = req.app.get('socket');
-		io.in('admin').emit('panel', 'delete', { id: req.params.panelID });
-		return res.status(200).send('Panel succesfully deleted');
+		panel = await Panel.findOne({ where: { panelID: req.params.panelID } });
+		if (panel.hasOwnProperty('dataValues')) {
+			panel = panel.dataValues;
+			console.log(panel);
+			await Panel.destroy({ where: { panelID: req.params.panelID }, transaction: t });
+			await User.destroy({ where: { id: panel.userID }, transaction: t });
+			await t.commit();
+			let io = req.app.get('socket');
+			io.in('admin').emit('panel', 'delete', { id: req.params.panelID });
+			return res.status(200).send('Panel succesfully deleted');
+		} else {
+			return res.status(400).send('Panel couldnt be deleted');
+		}
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send(e.message);
 	}
 };
