@@ -30,9 +30,6 @@ var io = require('socket.io')(server, {
 	cors: {
 		origin: '*',
 	},
-	maxHttpBufferSize: 1024, 
-    pingInterval: 60 * 1000, 
-    pingTimeout: 4 * 60 * 1000 
 });
 
 io.on('connection', (client) => {
