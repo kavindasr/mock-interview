@@ -178,8 +178,7 @@ exports.addFeedback = async (req, res) => {
 			company = company.dataValues;
 		}
 
-		let resuly = await sendMail(`Feedback of ${company.companyName}`, req.body.feedback, company.email, { company: company.companyName, feedback: req.body.feedback , name: company.name},true);
-		console.log(resuly)
+		sendMail(`Feedback of ${company.companyName}`, req.body.feedback, company.email, { company: company.companyName, feedback: req.body.feedback , name: company.name},true);
 		if (interview.hasOwnProperty('dataValues')) {
 			interview = converter(interview.dataValues);
 		}
