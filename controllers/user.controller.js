@@ -88,7 +88,6 @@ exports.createUser = async (req, res) => {
 			length: 10,
 			numbers: true,
 		});
-		console.log(password);
 		let salt = await bcrypt.genSalt(10);
 		user.password = await bcrypt.hash(password, salt);
 		user = await User.create(user, { transaction: t });
@@ -149,7 +148,6 @@ exports.deleteUser = async (req, res) => {
 exports.changePassword = async (req, res) => {
 	let password = req.body.newPassword;
 	let confirmPassword = req.body.confirmNewPassword;
-	console.log(req.body);
 	if (password != confirmPassword) {
 		return res.status(400).send('Passwords dont match');
 	}

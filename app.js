@@ -36,9 +36,12 @@ var io = require('socket.io')(server, {
 });
 
 io.on('connection', (client) => {
-	client.on('subscribe', (room, panelID = [-1]) => {
+	client.on('subscribe', (room, panelID = -1) => {
 		client.join(room);
-		if (panelID[0] != -1) {
+		if(Array.isArray(panelID)){
+			panelID = panelID[0]
+		}
+		if (panelID != -1) {
 			client.panelID = panelID;
 		}
 	});

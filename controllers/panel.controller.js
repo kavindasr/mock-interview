@@ -98,7 +98,6 @@ exports.createPanel = async (req, res) => {
 			length: 10,
 			numbers: true,
 		});
-		console.log(password);
 		let salt = await bcrypt.genSalt(10);
 		user.password = await bcrypt.hash(password, salt);
 		user = await User.create({ ...user, role: 'Panel' }, { transaction: t });
@@ -210,7 +209,6 @@ exports.deletePanel = async (req, res) => {
 		panel = await Panel.findOne({ where: { panelID: req.params.panelID } });
 		if (panel.hasOwnProperty('dataValues')) {
 			panel = panel.dataValues;
-			console.log(panel);
 			await Panel.destroy({ where: { panelID: req.params.panelID }, transaction: t });
 			await User.destroy({ where: { id: panel.userID }, transaction: t });
 			await t.commit();
