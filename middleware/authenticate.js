@@ -40,7 +40,6 @@ opts.secretOrKey = config.jsonwebtoken;
 
 exports.jwtPassport = passport.use(new JwtStrategy(opts,
     (jwt_payload, done) => {
-        console.log("JWT payload: ", jwt_payload);
         User.findOne({where:{id:jwt_payload.userID}, attributes: {exclude:'password'}})
         .then(user => {
             if(!user){

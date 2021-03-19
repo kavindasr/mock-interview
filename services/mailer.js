@@ -16,7 +16,6 @@ const options = {
 	viewPath: path.join(__dirname, '../views/layouts'),
 };
 
-console.log(__dirname);
 const oAuth2Client = new google.auth.OAuth2(config.mail.clinetID, config.mail.clientSecret, config.mail.redirectUri);
 
 oAuth2Client.setCredentials({ refresh_token: config.mail.refreshToken });

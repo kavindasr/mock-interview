@@ -5,7 +5,6 @@ const converter = require('../util/converter');
  *@returns Array<{officerID, name, role, stationID, stationName, location, type, contactNo}>
  */
 exports.getCompanies = async (req, res) => {
-	console.log(req.user);
 	let companies = [];
 	try {
 		companies = await Company.findAll();
