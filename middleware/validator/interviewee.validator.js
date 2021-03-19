@@ -6,7 +6,7 @@ const intervieweeAttributes = ['name', 'email', 'contactNo', 'dept']
 const updateIntervieweeSchema = Joi.object().keys({
     intervieweeID: Joi.number().integer().greater(0),
 	name: Joi.string().max(100),
-	email: Joi.string().email().max(50),
+	email: Joi.string().max(50),
 	contactNo: Joi.string()
 		.length(10)
 		.pattern(/^[0-9]+$/),

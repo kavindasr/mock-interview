@@ -6,7 +6,7 @@ const panelAttributes = ['companyID', 'name', 'email', 'contactNo'];
 const updatePanelSchema = Joi.object().keys({
 	id: Joi.number().integer().greater(0),
 	name: Joi.string().max(100),
-	email: Joi.string().email().max(40),
+	email: Joi.string().max(40),
 	contactNo: Joi.string()
 		.length(10)
 		.pattern(/^[0-9]+$/),
